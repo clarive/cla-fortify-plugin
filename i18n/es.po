@@ -1,0 +1,43 @@
+#: init/fortify-plugin-services.js
+msgid "Get fortify OAuth token"
+msgstr "Obtener token OAuth"
+
+#: init/fortify-plugin-services.js
+msgid "Gets a OAuth token to access fortify API"
+msgstr "Obtiene un token OAut para acceder a Fortify a través de la API"
+
+#: init/fortify-plugin-services.js
+msgid "Get the list of projects created in Fortify"
+msgstr "Obtener la lista de projectos disponibles en Fortify"
+
+#: init/fortify-plugin-services.js
+msgid "Gets the list of projects available in Fortify"
+msgstr "Obtiene la lista de projectos disponibles en Fortify"
+
+#: init/fortify-plugin-services.js
+msgid "Application deployed in"
+msgstr ""
+
+#: public/form/fortify-get_projects.js public/form/fortify-get_token.js
+msgid "Instance"
+msgstr "Instancia"
+
+#: public/form/fortify-get_projects.js
+msgid "Token"
+msgstr "Token"
+
+#: public/form/fortify-instance.js
+msgid "Fortify URL"
+msgstr "URL de Fortify"
+
+#: public/form/fortify-instance.js
+msgid "Fortify api URL"
+msgstr "URL de Fortify API"
+
+#: public/form/fortify-instance.js
+msgid "Key"
+msgstr "Clave"
+
+#: public/form/fortify-instance.js
+msgid "Secret"
+msgstr "Secreto"

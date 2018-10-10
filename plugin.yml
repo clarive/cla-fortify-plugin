@@ -1,0 +1,9 @@
+name: Fortify Plugin
+description: Fortify Plugin is designed to be able to run on demand analysis in Fortify.
+version: 1.0
+icon: https://598d8f3cda4c5fed8f27-d10999d18a3b8ba163ad6d48476ec57a.ssl.cf5.rackcdn.com/mf_logo_blue.svg
+url: https://github.com/clarive/cla-fortify-plugin
+requires:
+  - clarive_version: 6.8 <= version
+dependencies:
+  - cla-fortify-plugin
