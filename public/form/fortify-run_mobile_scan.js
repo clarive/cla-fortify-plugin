@@ -3,7 +3,7 @@
         name: "instance",
         class: "FortifyInstance",
         fieldLabel: _("Instance"),
-        value: params.data.instance || "",
+        value: params.data.instance,
         allowBlank: false,
         with_vars: 1
     });
@@ -11,144 +11,58 @@
     var applicationId = Cla.ui.textField({
         name: "application_id",
         fieldLabel: _("Application ID"),
-        value: params.data.application_id || "",
+        value: params.data.application_id,
         allowBlank: false
     });
 
     var releaseName = Cla.ui.textField({
         name: "release_name",
         fieldLabel: _("Release Name"),
-        value: params.data.release_name || "",
+        value: params.data.release_name,
         allowBlank: false
     });
 
-    var type = Cla.ui.comboBox({
-        name: "type",
-        fieldLabel: _("Type"),
-        data: [
-            ["static", "Static"],
-            ["dynamic", "Dynamic"],
-            ["mobile", "Mobile"]
-        ],
-        value: params.data.type,
-        allowBlank: false,
-        singleMode: true
-    });
-
-    type.on("addItem", function() {
-        var v = type.getValue();
-
-        if (v == "static") {
-            staticEntitlement.show();
-            dynamicEntitlement.hide();
-            mobileEntitlement.hide();
-        } else if (v == "dynamic") {
-            staticEntitlement.hide();
-            dynamicEntitlement.show();
-            mobileEntitlement.hide();
-        } else {
-            staticEntitlement.hide();
-            dynamicEntitlement.hide();
-            mobileEntitlement.show();
-        }
-    });
-
-    var staticEntitlement = Cla.ui.comboBox({
-        name: "static_entitlement",
+    var entitlement = Cla.ui.ciCombo({
+        name: "entitlement",
+        class: "FortifyEntitlement",
         fieldLabel: _("Entitlement Preference"),
-        data: [["SingleScan", "Single Scan"], ["Subscription", "Subscription"]],
-        value: params.data.static_entitlement || "SingleScan",
-        allowBlank: false,
-        singleMode: true
-    });
-
-    var dynamicEntitlement = Cla.ui.comboBox({
-        name: "dynamic_entitlement",
-        fieldLabel: _("Entitlement Preference"),
-        data: [
-            [
-                "Dynamic+ Webservices Assessment - Single Scan",
-                "Dynamic+ Webservices Assessment - Single Scan"
-            ],
-            [
-                "Dynamic+ Website Assessment - Subscription",
-                "Dynamic+ Website Assessment - Subscription"
-            ],
-            [
-                "Dynamic+ Website Assessment - Single Scan",
-                "Dynamic+ Website Assessment - Single Scan"
-            ],
-            [
-                "Dynamic Website Assessment - Subscription",
-                "Dynamic Website Assessment - Subscription"
-            ],
-            [
-                "Dynamic Website Assessment - Single Scan",
-                "Dynamic Website Assessment - Single Scan"
-            ]
-        ],
-        value: params.data.dynamic_entitlement,
+        value: params.data.entitlement || "",
         allowBlank: false,
         singleMode: true,
-        hidden: true
+        with_vars: 1
     });
 
-    var mobileEntitlement = Cla.ui.comboBox({
-        name: "mobile_entitlement",
-        fieldLabel: _("Entitlement Preference"),
-        data: [
-            [
-                "Mobile+ Assessment - Subscription",
-                "Mobile+ Assessment - Subscription"
-            ],
-            [
-                "Mobile+ Assessment - Single Scan",
-                "Mobile+ Assessment - Single Scan"
-            ],
-            [
-                "Mobile Assessment - Subscription",
-                "Mobile Assessment - Subscription"
-            ],
-            [
-                "Mobile Assessment - Single Scan",
-                "Mobile Assessment - Single Scan"
-            ]
-        ],
-        value: params.data.mobile_entitlement,
+    var timeZone = Cla.ui.ciCombo({
+        name: "time_zone",
+        class: "FortifyTimezone",
+        fieldLabel: _("Timezone"),
+        value: params.data.time_zone,
         allowBlank: false,
-        singleMode: true,
-        hidden: true
+        with_vars: 1
     });
 
-    var audit = Cla.ui.comboBox({
-        name: "audit",
-        fieldLabel: _("Audit Preference"),
-        data: [["Manual", "Manual"], ["Automated", "Automated"]],
-        value: params.data.audit || "Automated",
+    var frameworkType = Cla.ui.comboBox({
+        name: "framework_type",
+        fieldLabel: _("Framework Type"),
+        data: [["iOS", "iOS"], ["Android", "Android"], ["Windows", "Windows"]],
+        value: params.data.framework_type,
         allowBlank: false,
         singleMode: true
     });
 
-    var preference = Cla.ui.comboBox({
-        name: "preference",
-        fieldLabel: _("Preference"),
-        data: [["Standard", "Standard"], ["Express", "Express"]],
-        value: params.data.preference || "Express",
+    var platformType = Cla.ui.comboBox({
+        name: "platform_type",
+        fieldLabel: _("Platform Type"),
+        data: [["Phone", "Phone"], ["Tablet", "Tablet"], ["Both", "Both"]],
+        value: params.data.platform_type,
         allowBlank: false,
         singleMode: true
-    });
-
-    var notes = Cla.ui.textArea({
-        name: "notes",
-        fieldLabel: _("Notes"),
-        value: params.data.notes || "",
-        allowBlank: true
     });
 
     var path = Cla.ui.textField({
-        name: "path",
-        fieldLabel: _("Sources Zip File Path"),
-        value: params.data.path,
+        name: "file_path",
+        fieldLabel: _("Application file path"),
+        value: params.data.file_path,
         allowBlank: false
     });
 
@@ -159,29 +73,15 @@
         allowBlank: false
     });
 
-    var params = Cla.ui.dataEditor({
-        name: "params",
-        fieldLabel: _("Aditional Parameters (Static only)"),
-        title: _("Form params"),
-        hide_save: true,
-        hide_cancel: true,
-        height: 260,
-        data: params.data.params || {}
-    });
-
     return [
         instance,
         applicationId,
         releaseName,
+        frameworkType,
+        platformType,
         path,
-        type,
+        timeZone,
         interval,
-        staticEntitlement,
-        dynamicEntitlement,
-        mobileEntitlement,
-        preference,
-        audit,
-        notes,
-        params
+        entitlement
     ];
 });

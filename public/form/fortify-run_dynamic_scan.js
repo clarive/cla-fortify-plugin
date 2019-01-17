@@ -22,34 +22,14 @@
         allowBlank: false
     });
 
-    var entitlement = Cla.ui.comboBox({
+    var entitlement = Cla.ui.ciCombo({
         name: "entitlement",
+        class: "FortifyEntitlement",
         fieldLabel: _("Entitlement Preference"),
-        data: [
-            [
-                "Dynamic+ Webservices Assessment - SingleScan",
-                "Dynamic+ Webservices Assessment - SingleScan"
-            ],
-            [
-                "Dynamic+ Website Assessment - Subscription",
-                "Dynamic+ Website Assessment - Subscription"
-            ],
-            [
-                "Dynamic+ Website Assessment - SingleScan",
-                "Dynamic+ Website Assessment - SingleScan"
-            ],
-            [
-                "Dynamic Website Assessment - Subscription",
-                "Dynamic Website Assessment - Subscription"
-            ],
-            [
-                "Dynamic Website Assessment - SingleScan",
-                "Dynamic Website Assessment - SingleScan"
-            ]
-        ],
-        value: params.data.entitlement,
+        value: params.data.entitlement || "",
         allowBlank: false,
-        singleMode: true
+        singleMode: true,
+        with_vars: 1
     });
 
     var interval = Cla.ui.numberField({

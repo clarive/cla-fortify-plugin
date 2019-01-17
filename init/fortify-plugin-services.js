@@ -1,21 +1,32 @@
 var reg = require("cla/reg");
 
 reg.beforeEvent("event.clarive.started", function() {
+    console.log("Interceptando evento before online");
+});
+
+reg.beforeEvent("event.clarive.started", function() {
     var utils = require("fortifyUtils");
 
     console.log("Starting Fortify Plugin initialization");
 
-    utils.checkVariables();
+    utils.checkVariables(
+        [
+            {name: "fortify_application_id"},
+            {name: "fortify_scantypes_available", var_type: "array", variables: {'*':["Static","Dynamic","Mobile"]} }
+        ]
+    );
+    utils.checkTimezones();
+    utils.checkEntitlements();
 
     console.log("Finished Fortify Plugin initialization");
 });
 
-// reg.register("event.fortify.paused_scan", {
-//     text: _("FoD analysis is paused"),
-//     name: _("FoD analysis is paused"),
-//     description: _("FoD analysis is paused and needs manual intervention"),
-//     vars: ["scan_id"]
-// });
+reg.register("event.fortify.paused_scan", {
+    text: _("FoD analysis is paused"),
+    name: _("FoD analysis is paused"),
+    description: _("FoD analysis is paused and needs manual intervention"),
+    vars: ["scan_id"]
+});
 
 reg.register("service.fortify.get_token", {
     name: _("Get fortify OAuth token"),
@@ -328,57 +339,37 @@ reg.register("service.fortify.run_dynamic_scan", {
     }
 });
 
-// reg.register("service.fortify.run_mobile_scan", {
-//     name: _("Runs a mobile scan in FoD"),
-//     icon: "/plugin/cla-fortify-plugin/icon/fortify.svg",
-//     form: "/plugin/cla-fortify-plugin/form/fortify-run_mobile_scan.js",
-//     rulebook: {
-//         moniker: "fortify_run_mobile_scan",
-//         description: _("Runs a mobile scan in FoD"),
-//         required: [
-//             "instance",
-//             "token",
-//             "src_file",
-//             "bsi_token",
-//             "entitlePreference",
-//             "foduploader_path"
-//         ],
-//         allow: [
-//             "instance",
-//             "src_file",
-//             "bsi_token",
-//             "entitlement",
-//             "audit",
-//             "notes",
-//             "foduploader_path"
-//         ],
-//         examples: [
-//             {
-//                 fortify_run_scan: {
-//                     instance: "eu_fortify",
-//                     token: "fasdafasdfasdfasdfreqet433twgafsdzxchgt345wqsdf",
-//                     src_file: "/opt/clarive/jobs/xxxx/sources.zip",
-//                     entitlement: "SingleScan",
-//                     audit: "Manual",
-//                     notes: "This is my testing scan",
-//                     bsi_token:
-//                         "fds13p4oi5y098ygdAFPHI78087r10987fsfGsfdoiutosf",
-//                     foduploader_path: "/opt/clarive/bin/FodUpload.jar"
-//                 }
-//             }
-//         ]
-//     },
+reg.register("service.fortify.run_mobile_scan", {
+    name: _("Runs a mobile scan in FoD"),
+    icon: "/plugin/cla-fortify-plugin/icon/fortify.svg",
+    form: "/plugin/cla-fortify-plugin/form/fortify-run_mobile_scan.js",
+    rulebook: {
+        moniker: "fortify_run_mobile_scan",
+        description: _("Runs a mobile scan in FoD"),
+        required: ["instance", "token", "path", "release_name"],
+        allow: ["instance", "path", "entitlement"],
+        examples: [
+            {
+                fortify_run_mobile_scan: {
+                    instance: "eu_fortify",
+                    token: "fasdafasdfasdfasdfreqet433twgafsdzxchgt345wqsdf",
+                    path: "/opt/clarive/jobs/xxxx/sources.zip",
+                    entitlement: "SingleScan"
+                }
+            }
+        ]
+    },
 
-//     handler: function(ctx, config) {
-//         var utils = require("fortifyUtils");
+    handler: function(ctx, config) {
+        var utils = require("fortifyUtils");
 
-//         config.type = "mobile";
+        config.type = "mobile";
 
-//         var scanId = utils.runScan(config);
+        var scanId = utils.runScan(config);
 
-//         return scanId;
-//     }
-// });
+        return scanId;
+    }
+});
 
 reg.register("service.fortify.get_vulnerabilities", {
     name: _("Gets the vulnerabilities of a FoD release"),

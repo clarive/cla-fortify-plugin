@@ -22,13 +22,15 @@
         allowBlank: false
     });
 
-    var entitlement = Cla.ui.comboBox({
+    var entitlement = Cla.ui.ciCombo({
         name: "entitlement",
+        class: "FortifyEntitlement",
         fieldLabel: _("Entitlement Preference"),
-        data: [["SingleScan", "Single Scan"], ["Subscription", "Subscription"]],
-        value: params.data.entitlement || "SingleScan",
+        value: params.data.entitlement || "",
+        baseparams: { scan_type: 'Static'},
         allowBlank: false,
-        singleMode: true
+        singleMode: true,
+        with_vars: 1
     });
 
     var audit = Cla.ui.comboBox({
