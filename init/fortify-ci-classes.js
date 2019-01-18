@@ -35,6 +35,16 @@ ci.createClass("FortifyInstance", {
     }
 });
 
+ci.createClass("FortifyMobileFramework", {
+    icon: "/plugin/cla-fortify-plugin/icon/fortify.svg",
+    roles: ["Fortify", "ClariveSE"]
+});
+
+ci.createClass("FortifyMobilePlatform", {
+    icon: "/plugin/cla-fortify-plugin/icon/fortify.svg",
+    roles: ["Fortify", "ClariveSE"]
+});
+
 ci.createClass("FortifyEntitlement", {
     form: "/plugin/cla-fortify-plugin/form/fortify-entitlement.js",
     icon: "/plugin/cla-fortify-plugin/icon/fortify.svg",

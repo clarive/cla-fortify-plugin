@@ -38,24 +38,27 @@
         fieldLabel: _("Timezone"),
         value: params.data.time_zone,
         allowBlank: false,
-        with_vars: 1
-    });
-
-    var frameworkType = Cla.ui.comboBox({
-        name: "framework_type",
-        fieldLabel: _("Framework Type"),
-        data: [["iOS", "iOS"], ["Android", "Android"], ["Windows", "Windows"]],
-        value: params.data.framework_type,
-        allowBlank: false,
+        with_vars: 1,
         singleMode: true
     });
 
-    var platformType = Cla.ui.comboBox({
+    var frameworkType = Cla.ui.ciCombo({
+        name: "framework_type",
+        class: "FortifyMobileFramework",
+        fieldLabel: _("Framework Type"),
+        value: params.data.framework_type,
+        allowBlank: false,
+        with_vars: 1,
+        singleMode: true
+    });
+
+    var platformType = Cla.ui.ciCombo({
         name: "platform_type",
+        class: "FortifyMobilePlatform",
         fieldLabel: _("Platform Type"),
-        data: [["Phone", "Phone"], ["Tablet", "Tablet"], ["Both", "Both"]],
         value: params.data.platform_type,
         allowBlank: false,
+        with_vars: 1,
         singleMode: true
     });
 

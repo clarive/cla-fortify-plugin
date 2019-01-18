@@ -219,37 +219,6 @@ exports.findOrCreateVariable = function(variable) {
     }
 };
 
-exports.checkEntitlements = function() {
-    var utils = require("fortifyUtils");
-    var entitlements = utils.getEntitlements();
-
-    entitlements.forEach(function(entitlement) {
-        utils.findOrCreateEntitlement(entitlement);
-    });
-}
-
-exports.findOrCreateEntitlement = function(entitlement) {
-    const ci = require("cla/ci");
-
-    var myCI = ci.findOne("FortifyEntitlement", {entitlement_name: entitlement.entitlement_name});
-
-    if (myCI) {
-        console.log(
-            "Entitlement " + entitlement.entitlement_name + " already exists.  Skipped creation"
-        );
-    } else {
-        try {
-            var entitlementCI = ci.build("FortifyEntitlement", { name: entitlement.entitlement_name, entitlement_name: entitlement.entitlement_name, scan_type: entitlement.scan_type });
-            entitlementCI.save();
-            console.log("Entitlement " + entitlement.entitlement_name + " created");
-        } catch (err) {
-            console.error(
-                "Error creating CI Entitlement " + entitlement.entitlement_name + ": " + err
-            );
-        }
-    }
-};
-
 exports.checkTimezones = function() {
     var utils = require("fortifyUtils");
     const ci = require("cla/ci");
@@ -574,13 +543,15 @@ exports.runMobileScan = function(config) {
     today = today.getMonth()+1 + "/" + today.getDate() + "/" + today.getFullYear();;
 
     var timeZone = ci.findOne("FortifyTimezone", { mid: config.time_zone[0] });
+    var platformType = ci.findOne("FortifyMobilePlatform", { mid: config.platform_type[0] });
+    var frameworkType = ci.findOne("FortifyMobileFramework", { mid: config.framework_type[0] });
 
     config.params = {
         assessmentTypeId: type.assessmentTypeId,
         entitlementId: type.entitlementId,
         entitlementFrequencyType: type.frequencyType,
-        frameworkType: config.framework_type,
-        platformType: config.platform_type,
+        frameworkType: frameworkType.name,
+        platformType: platformType.name,
         timeZone: timeZone.timezone_code,
         offset: '0',
         startDate: today
@@ -696,6 +667,37 @@ exports.getReleaseVulnerabilities = function(config) {
     return vulnerabilities;
 };
 
+exports.checkEntitlements = function() {
+    var utils = require("fortifyUtils");
+    var entitlements = utils.getEntitlements();
+
+    entitlements.forEach(function(entitlement) {
+        utils.findOrCreateEntitlement(entitlement);
+    });
+}
+
+exports.findOrCreateEntitlement = function(entitlement) {
+    const ci = require("cla/ci");
+
+    var myCI = ci.findOne("FortifyEntitlement", {entitlement_name: entitlement.entitlement_name});
+
+    if (myCI) {
+        console.log(
+            "Entitlement " + entitlement.entitlement_name + " already exists.  Skipped creation"
+        );
+    } else {
+        try {
+            var entitlementCI = ci.build("FortifyEntitlement", { name: entitlement.entitlement_name, entitlement_name: entitlement.entitlement_name, scan_type: entitlement.scan_type });
+            entitlementCI.save();
+            console.log("Entitlement " + entitlement.entitlement_name + " created");
+        } catch (err) {
+            console.error(
+                "Error creating CI Entitlement " + entitlement.entitlement_name + ": " + err
+            );
+        }
+    }
+};
+
 exports.getEntitlements = function() {
     return [
         {
@@ -743,4 +745,118 @@ exports.getEntitlements = function() {
             scan_type: "Static"
         }
     ];
+};
+
+exports.checkMobilePlatforms = function() {
+    var utils = require("fortifyUtils");
+    var ci = require("cla/ci");
+
+    var config = {};
+
+    config.instance = ci.findOne("FortifyInstance", { active: 1 });
+
+    if (config.instance) {
+        config.instance = config.instance.mid;
+
+        var platforms = utils.getMobilePlatforms(config);
+
+        platforms.forEach(function(platform) {
+            utils.findOrCreateMobilePlatform(platform);
+        });
+    }
+};
+
+exports.findOrCreateMobilePlatform = function(platform) {
+    const ci = require("cla/ci");
+
+    var myCI = ci.findOne("FortifyMobilePlatform", {name: platform.text});
+
+    if (myCI) {
+        console.log(
+            "Platform " + platform.text + " already exists.  Skipped creation"
+        );
+    } else {
+        try {
+            var platformCI = ci.build("FortifyMobilePlatform", { name: platform.text });
+            platformCI.save();
+            console.log("Platform " + platform.text + " created");
+        } catch (err) {
+            console.error(
+                "Error creating CI Platform " + platform.text + ": " + err
+            );
+        }
+    }
+};
+
+exports.getMobilePlatforms = function(config) {
+    var log = require("cla/log");
+    var web = require("cla/web");
+    var utils = require("fortifyUtils");
+
+    config.path = "/lookup-items";
+    config.method = "GET";
+    config.params = { type: 'MobileScanPlatformTypes' };
+
+    var response = utils.genericCall(config);
+
+    var platforms = response.content.items;
+
+    return platforms;
+};
+
+exports.checkMobileFrameworks = function() {
+    var utils = require("fortifyUtils");
+    var ci = require("cla/ci");
+
+    var config = {};
+
+    config.instance = ci.findOne("FortifyInstance", { active: 1 });
+
+    if (config.instance) {
+        config.instance = config.instance.mid;
+
+        var frameworks = utils.getMobileFrameworks(config);
+
+        frameworks.forEach(function(framework) {
+            utils.findOrCreateMobileFramework(framework);
+        });
+    }
+};
+
+exports.findOrCreateMobileFramework = function(framework) {
+    const ci = require("cla/ci");
+
+    var myCI = ci.findOne("FortifyMobileFramework", {name: framework.text});
+
+    if (myCI) {
+        console.log(
+            "Framework " + framework.text + " already exists.  Skipped creation"
+        );
+    } else {
+        try {
+            var frameworkCI = ci.build("FortifyMobileFramework", { name: framework.text });
+            frameworkCI.save();
+            console.log("Framework " + framework.text + " created");
+        } catch (err) {
+            console.error(
+                "Error creating CI framework " + framework.text + ": " + err
+            );
+        }
+    }
+};
+
+exports.getMobileFrameworks = function(config) {
+    var log = require("cla/log");
+    var web = require("cla/web");
+    var utils = require("fortifyUtils");
+
+    config.path = "/lookup-items";
+    config.method = "GET";
+    config.params = { type: 'MobileScanFrameworkTypes' };
+
+    var response = utils.genericCall(config);
+
+    var frameworks = response.content.items;
+
+    return frameworks;
 }

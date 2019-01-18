@@ -1,22 +1,29 @@
 var reg = require("cla/reg");
 
 reg.beforeEvent("event.clarive.started", function() {
-    console.log("Interceptando evento before online");
-});
-
-reg.beforeEvent("event.clarive.started", function() {
     var utils = require("fortifyUtils");
 
     console.log("Starting Fortify Plugin initialization");
 
+    console.log("*** Checking system variables");
     utils.checkVariables(
         [
             {name: "fortify_application_id"},
-            {name: "fortify_scantypes_available", var_type: "array", variables: {'*':["Static","Dynamic","Mobile"]} }
+            {name: "fortify_scantypes_available", var_type: "array", variables: {'*':["Static"]} }
         ]
     );
+
+    console.log("*** Checking timezones");
     utils.checkTimezones();
+
+    console.log("*** Checking entitlements");
     utils.checkEntitlements();
+
+    console.log("*** Checking mobile platforms");
+    utils.checkMobilePlatforms();
+
+    console.log("*** Checking mobile frameworks");
+    utils.checkMobileFrameworks();
 
     console.log("Finished Fortify Plugin initialization");
 });
